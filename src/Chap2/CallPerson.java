@@ -24,35 +24,35 @@ public class CallPerson {
 
         //เรียกใช้ Student 
         Student kasiditStd = new Student();
-        kasiditStd.studentId = "654295012";
-        kasiditStd.studentName = "Bongkot";
+        kasiditStd.studentId = "654295001";
+        kasiditStd.studentName = "Kasidit";
         kasiditStd.faculty = "เทคโนโลยีสารสนเทศและนวัฒกรรมดิจิทัล";
-        kasiditStd.major = "วิทยาศาสตร์เทคโนโลยี";
+        kasiditStd.major = "วิทยาศาสตร์เทคโนโลยีและเทคโนโลยี";
         System.out.println("****************** Student ****************");
 
         //เรียกใช้ method
         kasiditStd.enrollment("654295012");
         kasiditStd.payment("25450");
         kasiditStd.addCourse("AI");
-        kasiditStd.dropCourse("database system");
+        kasiditStd.dropCourse("Database System");
         System.out.println("****************** Nawakon ******************");
 
         //GraduateStuden
         GraduateStuden kasiditGstd = new GraduateStuden();
-        kasiditGstd.oralExamination("ฺBewBon");
+        kasiditGstd.oralExamination("BewBon");
         kasiditGstd.thesisExamination("Mr.Son");
         kasiditGstd.studentName = "Kasidit";
         kasiditGstd.faculty = "เทคโนโลยีสารสนเทศและนวัฒกรรมดิจิทัล";
         kasiditGstd.major = "วิทยาศาสตร์และเทคโนโลยี";
         kasiditGstd.enrollment("654295001");
         kasiditGstd.payment("25000");
-        kasiditGstd.addCourse("AI");
-        kasiditGstd.dropCourse("database system");
+        kasiditGstd.addCourse("Database system");
+        kasiditGstd.dropCourse("OOP");
 
         nawakon.showAttribute();
         System.out.println("******************** Kasidit *******************");
         kasidit.showAttribute();
-        System.out.println("******************************************");
+        System.out.println("************************************************");
 
         kasidit.eat(); // nameObject => namemethod
         kasidit.walk();
