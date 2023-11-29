@@ -3,7 +3,7 @@ package Chap2;
 public class CallPerson {
 
     public static void main(String[] args) {
-        // Kasidit
+        // Kasidit 
         Person kasidit = new Person();
         kasidit.citizet = "1937003466953";
         kasidit.name = "Kasidit";
@@ -18,7 +18,7 @@ public class CallPerson {
         nawakon.citizet = "1937046646923";
         nawakon.name = "Nawakorn";
         nawakon.surname = "Madang";
-        nawakon.sex = "M";
+        nawakon.sex = "M"; 
         nawakon.age = 20;
         nawakon.address = "21 Songkhla";
 
