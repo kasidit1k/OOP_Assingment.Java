@@ -7,6 +7,20 @@ public class Student {
     protected String faculty;
     protected String major;
 
+    public Student() { //default constructor
+        System.out.println("Default Constructor");
+
+    }
+
+    public Student(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public Student(String studentId, String studentName, String วิทยาศาสตร์, String itdi) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+    }
+
     public void enrollment(String studentID) { //method ลงทะเบียน 
         System.out.println("Enrollment : " + studentID);
     }
@@ -23,4 +37,10 @@ public class Student {
         System.out.println("dropCourse : " + studenID);
     }
 
+    void showAttribute() {
+        System.out.println("studentId = " + studentId);
+        System.out.println("studentName = " + studentName);
+        System.out.println("faculty = " + faculty);
+        System.out.println("major = " + major);
+    }
 }
