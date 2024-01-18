@@ -26,7 +26,7 @@ class Subjects{
         return grade;
     }
     
-    //Setter
+
 
     public void setTerms(String terms) {
         this.terms = terms;

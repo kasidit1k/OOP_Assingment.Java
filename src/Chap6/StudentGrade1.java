@@ -65,8 +65,8 @@ public class StudentGrade1 {
             } else if (menu == 3) {
                 System.out.println("GPA Summary");
 
-                String targetStudentId = "001";
                 for (Student student : studentlist) {
+                    Object targetStudentId = "0";
                     if (student.getId().equals(targetStudentId)) {
                         System.out.println("ID : " + student.getId());
                         System.out.println("Name : " + student.getName());
@@ -98,7 +98,7 @@ public class StudentGrade1 {
         } while (menu != 0 && menu < 3);
     }
 
-    private static int getGradePoints(String grade) {
+    public static int getGradePoints(String grade) {
         switch (grade) {
             case "A":
                 return 4;

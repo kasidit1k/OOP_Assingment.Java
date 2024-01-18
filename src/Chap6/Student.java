@@ -21,7 +21,7 @@ class Student{
         return term;
     }
     
-    // Setter
+
 
     public void setId(String id) {
         this.id = id;
@@ -47,7 +47,7 @@ class PrintGrade{
     private int credit;
     private String grade;
     
-    //Getter
+
     public String getSemester(){
         return semester;
     }
