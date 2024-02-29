@@ -1,26 +1,25 @@
-package MiniProjectKasidit;
+package Chap9;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class StudentEntryGUI extends javax.swing.JFrame {
-    
     DefaultTableModel model;
-    MySQLDB myDB;
+    MySQL myDB;
     String id, name, surname;
 
     public StudentEntryGUI() {
         initComponents();
         model = (DefaultTableModel) tblData.getModel();
-        myDB = new MySQLDB(); // ถูกเรียกกลับทุกครั้งเมื่อรัน from
+        myDB = new MySQL(); // ถูกเรียกกลับทุกครั้งเมื่อรัน from
         loadData();
     }
 
     private void loadData() {
         String sql = "SELECT * FROM studentd order by id";
-        ArrayList<StudentInfo> list = myDB.selectQuery(sql);
-        for (StudentInfo info : list) {
+        ArrayList<StudentInfo1> list = myDB.selectQuery(sql);
+        for (StudentInfo1 info : list) {
             String[] row = {info.getId(), info.getName(), info.getSurname()};
             model.addRow(row);
             tblData.setModel(model);
@@ -166,7 +165,7 @@ public class StudentEntryGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(76, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))

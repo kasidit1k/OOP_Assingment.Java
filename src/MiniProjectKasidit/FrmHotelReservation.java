@@ -11,19 +11,19 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
     private final javax.swing.ButtonGroup buttonGroup1;
 
     DefaultTableModel model;
-    MySQLDB myDB;
+    MyDB myDb;
     String id, name, surname;
 
     public FrmHotelReservation() {
         initComponents();
         model = (DefaultTableModel) tblData.getModel();
-        myDB = new MySQLDB();
+        myDb = new MyDB();
         loadData();
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        cbxWeekend.addItem("Weekday (อา-พฤ)");
-        cbxWeekend.addItem("Weekend (ศ-ส)");
-        cbxWeekend.addItem("Long Weekend (หยุดยาว)");
+        cbxWeek.addItem("Weekday (อา-พฤ)");
+        cbxWeek.addItem("Weekend (ศ-ส)");
+        cbxWeek.addItem("Long Weekend (หยุดยาว)");
         buttonGroup1.add(rdbSuperior);
         buttonGroup1.add(rdbDeluxe);
         buttonGroup1.add(rdbGrandDeluxe);
@@ -31,39 +31,18 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         buttonGroup1.add(rdbGrandFamilySuite);
     }
 
-    private void getSelectedRow() {
-        int selectedRow = tblData.getSelectedRow();
-        if (selectedRow >= 0) {
-            String studentId = tblData.getValueAt(selectedRow, 0).toString();
-            String name = tblData.getValueAt(selectedRow, 1).toString();
-            String surname = tblData.getValueAt(selectedRow, 2).toString();
-
-            txtId.setText(studentId);
-            txtName.setText(name);
-            txtSurname.setText(surname);
-        }
-    }
-
     private void loadData() {
         model.setRowCount(0); // เคลียร์ข้อมูลในตารางก่อน
         String sql = "SELECT * FROM room ORDER BY id";
-        ArrayList<StudentInfo> list = myDB.selectQuery(sql);
-        for (StudentInfo info : list) {
-            String[] row = {
-                info.getId(),
-                info.getName(),
-                info.getSurname(),
-//                info.getRoomtype(), // เปลี่ยนจาก info.getRoomtype() เป็น info.getRoomType()
-//                String.valueOf(info.getPeriodofStay()), // เปลี่ยนจาก info.getPeriodofStay() เป็น info.getPeriodOfStay()
-//                String.valueOf(info.getNumberofDay()), // เปลี่ยนจาก info.getNumberofDay() เป็น info.getNumberOfDays()
-//                String.valueOf(info.getTotalprice())
-            };
+        ArrayList<HotelReserver> list = myDb.selectQuery(sql);
+        for (HotelReserver info : list) {
+            Object[] row = {info.getId(), info.getName(), info.getSurname(), info.getRoomtype(), info.getPeriod(), info.getDayscount(), info.getTotalprice()};
             model.addRow(row);
         }
         tblData.setModel(model);
-}
+    }
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -90,7 +69,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        cbxWeekend = new javax.swing.JComboBox<>();
+        cbxWeek = new javax.swing.JComboBox<>();
         spnDay = new javax.swing.JSpinner();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -280,7 +259,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
         jLabel5.setText("จำนวนวันที่เข้าพัก");
 
-        cbxWeekend.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        cbxWeek.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
 
         spnDay.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
 
@@ -294,7 +273,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                     .addComponent(spnDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxWeekend, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -303,7 +282,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxWeekend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxWeek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -366,11 +345,11 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Name", "Surname", "RoomType", "PeriodOfStay", "NumberOfDay", "TotalPrice"
+                "Id", "Name", "Surname", "RoomType", "Period", "NumberOfDay", "TotalPrice"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -477,37 +456,37 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
 
     private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcActionPerformed
         String roomType = "";
-        double rate = 0;
+        int rate = 0;
 
         if (rdbSuperior.isSelected()) {
             roomType = "Superior";
-            rate = cbxWeekend.getSelectedIndex() == 0 ? 2090
-                    : cbxWeekend.getSelectedIndex() == 1 ? 2490 : 3390;
+            rate = cbxWeek.getSelectedIndex() == 0 ? 2090
+                    : cbxWeek.getSelectedIndex() == 1 ? 2490 : 3390;
         } else if (rdbDeluxe.isSelected()) {
             roomType = "Deluxe";
-            rate = cbxWeekend.getSelectedIndex() == 0 ? 2290
-                    : cbxWeekend.getSelectedIndex() == 1 ? 2790 : 2690;
+            rate = cbxWeek.getSelectedIndex() == 0 ? 2290
+                    : cbxWeek.getSelectedIndex() == 1 ? 2790 : 2690;
         } else if (rdbGrandDeluxe.isSelected()) {
             roomType = "Grand Deluxe";
-            rate = cbxWeekend.getSelectedIndex() == 0 ? 3890
-                    : cbxWeekend.getSelectedIndex() == 1 ? 4490 : 5390;
+            rate = cbxWeek.getSelectedIndex() == 0 ? 3890
+                    : cbxWeek.getSelectedIndex() == 1 ? 4490 : 5390;
         } else if (rdbJuniorSuit.isSelected()) {
             roomType = "Junior Suit";
-            rate = cbxWeekend.getSelectedIndex() == 0 ? 3190
-                    : cbxWeekend.getSelectedIndex() == 1 ? 3890 : 4790;
+            rate = cbxWeek.getSelectedIndex() == 0 ? 3190
+                    : cbxWeek.getSelectedIndex() == 1 ? 3890 : 4790;
         } else if (rdbGrandFamilySuite.isSelected()) {
             roomType = "Grand Family Suite";
-            rate = cbxWeekend.getSelectedIndex() == 0 ? 3990
-                    : cbxWeekend.getSelectedIndex() == 1 ? 4690 : 5690;
+            rate = cbxWeek.getSelectedIndex() == 0 ? 3990
+                    : cbxWeek.getSelectedIndex() == 1 ? 4690 : 5690;
         }
 
         int numOfDays = (int) spnDay.getValue();
         double totalPrice = rate * numOfDays;
 
         txtAreaShow.setText("ประเภทห้อง : " + roomType + "\n"
-                + "ช่วงที่เข้าพัก : " + cbxWeekend.getSelectedItem().toString() + "\n"
+                + "ช่วงที่เข้าพัก : " + cbxWeek.getSelectedItem().toString() + "\n"
                 + "จำนวนวันเข้าพัก : " + numOfDays + "\n"
-                + "รวมราคา : " + totalPrice);
+                + "รวมราคา : " + totalPrice + " บาท");
     }//GEN-LAST:event_btnCalcActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
@@ -522,26 +501,57 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         buttonGroup1.clearSelection();
-        cbxWeekend.setSelectedIndex(0);
+        cbxWeek.setSelectedIndex(0);
         spnDay.setValue(0);
         txtAreaShow.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
-        String idAdd = txtId.getText();
-        String nameAdd = txtName.getText();
-        String surnameAdd = txtSurname.getText();
-        String roomType = "";
-        String weekendType = "";
-        String totalPrice = "0";
-        int numOfDays = (int) spnDay.getValue();
-        if (idAdd.length() > 0 && nameAdd.length() > 1 && surnameAdd.length() > 2) {
-            String rowData[] = {idAdd, nameAdd, surnameAdd, roomType, weekendType, Integer.toString(numOfDays), totalPrice};
-            String insert = "INSERT INTO room VALUES('" + idAdd + "','" + nameAdd + "','" + surnameAdd + "','" + roomType + "','" + weekendType + "','" + numOfDays + "','" + totalPrice + "')";
+        int id = Integer.parseInt(txtId.getText());
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String roomtype = "";
+        if (rdbSuperior.isSelected()) {
+            roomtype = "Superior";
+        } else if (rdbGrandDeluxe.isSelected()) {
+            roomtype = "Grand Deluxe";
+        } else if (rdbDeluxe.isSelected()) {
+            roomtype = "Deluxe";
+        } else if (rdbJuniorSuit.isSelected()) {
+            roomtype = "Junior Suite";
+        } else if (rdbGrandFamilySuite.isSelected()) {
+            roomtype = "Grand Family Suite";
+        }
+
+        String period = cbxWeek.getSelectedItem().toString();
+        int dayscount = (int) spnDay.getValue();
+
+        double pricePerDay = 0;
+        if (roomtype.equals("Superior")) {
+            pricePerDay = (period.equals("Weekend")) ? 2490 : (period.equals("Long Weekend")) ? 3390 : 2090;
+        } else if (roomtype.equals("Deluxe")) {
+            pricePerDay = (period.equals("Weekend")) ? 2790 : (period.equals("Long Weekend")) ? 2690 : 2290;
+        } else if (roomtype.equals("Grand Deluxe")) {
+            pricePerDay = (period.equals("Weekend")) ? 4490 : (period.equals("Long Weekend")) ? 5390 : 3890;
+        } else if (roomtype.equals("Junior Suite")) {
+            pricePerDay = (period.equals("Weekend")) ? 3890 : (period.equals("Long Weekend")) ? 4790 : 3190;
+        } else if (roomtype.equals("Grand Family Suite")) {
+            pricePerDay = (period.equals("Weekend")) ? 4690 : (period.equals("Long Weekend")) ? 5590 : 6490;
+        }
+
+        // Calculate total price
+        double totalprice = dayscount * pricePerDay;
+
+        if (name.length() > 1 && surname.length() > 2) {
+            String insert = "INSERT INTO room VALUES(" + id + ",'" + name + "','" + surname + "','" + roomtype + "','" + period + "'," + dayscount + "," + totalprice + ")";
             System.out.println("insert = " + insert);
-            int row = myDB.stmtCreInsUpdDel(insert);
+            int row = myDb.stmtCreInsUpdDel(insert);
             if (row > 0) {
+                Object[] rowData = {id, name, surname, roomtype, period, dayscount, totalprice};
                 model.addRow(rowData);
+                JLabel message = new JLabel("เพิ่มข้อมูลสำเร็จ");
+                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                JOptionPane.showMessageDialog(this, message);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Add Error");
             }
@@ -552,47 +562,93 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnAddDataActionPerformed
 
+//    private double extractDoubleFromString(String input) {
+//        String numberRegex = "\\d+(\\.\\d+)?";
+//        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(numberRegex);
+//        java.util.regex.Matcher matcher = pattern.matcher(input);
+//        if (matcher.find()) {
+//            String numberStr = matcher.group();
+//            return Double.parseDouble(numberStr);
+//        }
+//        return 0.0;
+//    }
+
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int row = tblData.getSelectedRow();
         if (row >= 0) {
             String id = (String) tblData.getValueAt(row, 0);
-            String delete = "DELETE FROM room where id = " + id;
-            System.out.println("Delete" + delete);
-            int delrow = myDB.stmtCreInsUpdDel(delete);
-            if (delrow > 0) {
-                model.removeRow(row);
-                JLabel message = new JLabel("ลบข้อมูลสำเร็จ");
-                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                JOptionPane.showMessageDialog(this, message);
-            } else {
-                JLabel message = new JLabel("ไม่สามารถลบได้!!!");
-                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                JOptionPane.showMessageDialog(this, message);
+            String delete = "DELETE FROM room WHERE id = '" + id + "'";
+
+            try {
+                int delrow = myDb.stmtCreInsUpdDel(delete);
+
+                if (delrow > 0) {
+                    model.removeRow(row);
+                    JLabel message = new JLabel("ลบข้อมูลสำเร็จ");
+                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                    JOptionPane.showMessageDialog(this, message);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "ไม่สามารถลบข้อมูลได้");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(rootPane, "เกิดข้อผิดพลาดในการลบข้อมูล");
             }
         } else {
-            JOptionPane.showMessageDialog(rootPane, "เลือกแถวข้อมูลก่อนลบค่ะ");
-        }  
+            JLabel message = new JLabel("เลือกแถวข้อมูลก่อนลบค่ะ");
+            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            JOptionPane.showMessageDialog(this, message);
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         int row = tblData.getSelectedRow();
-        String idUpd = (String) tblData.getValueAt(row, 0);
+        int idUpd = Integer.parseInt(txtId.getText());
         String nameUpd = txtName.getText();
         String surnameUpd = txtSurname.getText();
-        String update = "UPDATE room SET name = '" + nameUpd + "', surname = '" + surnameUpd + "' where id = " + idUpd;
+
+        String roomtypeUpd = "";
+        if (rdbSuperior.isSelected()) {
+            roomtypeUpd = "Superior";
+        } else if (rdbGrandDeluxe.isSelected()) {
+            roomtypeUpd = "Grand Deluxe";
+        } else if (rdbDeluxe.isSelected()) {
+            roomtypeUpd = "Deluxe";
+        } else if (rdbJuniorSuit.isSelected()) {
+            roomtypeUpd = "Junior Suite";
+        } else if (rdbGrandFamilySuite.isSelected()) {
+            roomtypeUpd = "Grand Family Suite";
+        }
+
+        String periodUpd = cbxWeek.getSelectedItem().toString();
+
+        int daysCountUpd = (int) spnDay.getValue();
+        int totalPriceUpd = Integer.parseInt(txtAreaShow.getText());
+
+        String update = "UPDATE room SET name = '" + nameUpd + "', surname = '" + surnameUpd + "', roomtype = '" + roomtypeUpd + "', period = '" + periodUpd + "', dayscount = " + daysCountUpd + ", totalprice = " + totalPriceUpd + " WHERE id = " + idUpd;
         System.out.println("update = " + update);
 
-        int updRow = myDB.stmtCreInsUpdDel(update); 
+        int updRow = myDb.stmtCreInsUpdDel(update);
         if (updRow > 0) {
             tblData.setValueAt(nameUpd, row, 1);
             tblData.setValueAt(surnameUpd, row, 2);
+            tblData.setValueAt(roomtypeUpd, row, 3);
+            tblData.setValueAt(periodUpd, row, 4);
+            tblData.setValueAt(daysCountUpd, row, 5);
+            tblData.setValueAt(totalPriceUpd, row, 6);
+
+            JLabel message = new JLabel("Data Updated Successfully");
+            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            JOptionPane.showMessageDialog(this, message);
         } else {
-            JOptionPane.showConfirmDialog(rootPane, "update error");
+            JLabel message = new JLabel("Error updating data!!!");
+            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            JOptionPane.showMessageDialog(this, message);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-        getSelectedRow();
+
     }//GEN-LAST:event_tblDataMouseClicked
 
 
@@ -603,7 +659,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JComboBox<String> cbxWeekend;
+    private javax.swing.JComboBox<String> cbxWeek;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

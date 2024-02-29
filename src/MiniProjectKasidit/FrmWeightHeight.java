@@ -24,24 +24,6 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         loadStudentData();
     }
 
-//    private void getSelectedRowAndSetToTextField() {
-//        int selectedRow = tblData.getSelectedRow();
-//        if (selectedRow >= 0) {
-//            String studentId = tblData.getValueAt(selectedRow, 0).toString();
-//            String name1 = tblData.getValueAt(selectedRow, 1).toString();
-//            String surName = tblData.getValueAt(selectedRow, 2).toString();
-//            String weight = tblData.getValueAt(selectedRow, 3).toString();
-//            String height = tblData.getValueAt(selectedRow, 4).toString();
-//            String weightResult = tblData.getValueAt(selectedRow, 5).toString();
-//            txtId.setText(studentId);
-//            txtName.setText(name1);
-//            txtSurname.setText(surName);
-//            txtWeight.setText(weight);
-//            txtHeight.setText(height);
-//            txtResult.setText(weightResult);
-//        }
-//    }
-
     private void loadStudentData() {
         model.setRowCount(0); // เคลียร์ข้อมูลในตารางก่อน
         String sql = "SELECT * FROM weight";
@@ -538,9 +520,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                 message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
                 JOptionPane.showMessageDialog(this, message);
             } else {
-                JLabel message = new JLabel("ไม่สามารถลบได้!!!");
-                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                JOptionPane.showMessageDialog(this, message);
+                JOptionPane.showConfirmDialog(rootPane, "cannot be deleted");
             }
         } else {
             JOptionPane.showMessageDialog(rootPane, "เลือกแถวข้อมูลก่อนลบค่ะ");
