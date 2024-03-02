@@ -433,7 +433,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1144, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1144, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -473,7 +473,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         double bmi = weight / (height * height);
 
         String result;
-        if (bmi >= 0 && bmi <= 22) {
+        if (bmi >= 0 && bmi <= 22.9) {
             result = "ปกติ";
             txtResult.setBackground(Color.GREEN);
         } else if (bmi > 22 && bmi <= 24) {
@@ -531,6 +531,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+
         int row = tblData.getSelectedRow();
         String idUpd = (String) tblData.getValueAt(row, 0);
         String nameUpd = txtName.getText();
@@ -538,10 +539,13 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         double weightUpd = Double.parseDouble(txtWeight.getText()); // แปลง String เป็น double
         double heightUpd = Double.parseDouble(txtHeight.getText()); // แปลง String เป็น double
         String weightResultUpd = txtResult.getText();
-        String update = "UPDATE weight SET name = '" + nameUpd + "', surname = '" + surnameUpd + "', weight = " + weightUpd + ", height = " + heightUpd + ", weightResult = '" + weightResultUpd + "' WHERE id = '" + idUpd + "'";
-        System.out.println("update = " + update);
 
-        int updRow = myDB.stmtCreInsUpdDel(update); //
+        String update = "UPDATE weight SET name = '" + nameUpd + "', surname = '" + surnameUpd + "', weight = " + weightUpd + ", height = " + heightUpd + ", weightResult = '" + weightResultUpd + "' WHERE id = '" + idUpd + "'";
+
+        System.out.println(
+                "update = " + update);
+
+        int updRow = myDB.stmtCreInsUpdDel(update);
         if (updRow > 0) {
             tblData.setValueAt(nameUpd, row, 1);
             tblData.setValueAt(surnameUpd, row, 2);
@@ -559,6 +563,10 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    
+    private boolean conditionForColorChange(String weightResult){
+        return "Normal".equals(weightResult);
+    }
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
         String idAdd = txtId.getText();
@@ -601,7 +609,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                 String surnameData = (String) tblData.getValueAt(row, 2);
                 double weightData = (double) tblData.getValueAt(row, 3);
                 double heightData = (double) tblData.getValueAt(row, 4);
-                String weightResultData = (String)tblData.getValueAt(row, 5);
+                String weightResultData = (String) tblData.getValueAt(row, 5);
 
                 txtId.setText(idData);
                 txtName.setText(nameData);

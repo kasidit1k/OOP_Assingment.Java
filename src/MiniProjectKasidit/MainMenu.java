@@ -4,6 +4,7 @@ public class MainMenu extends javax.swing.JFrame {
     // Variable \\
     FrmHotelReservation frmHR;
     FrmWeightHeight frmWH;
+    FrmReport frmRep;
 
                                                                                                        /*
      ---> Overload Constructor <---
@@ -19,9 +20,9 @@ public class MainMenu extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         dpShow = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuUsername = new javax.swing.JMenu();
-        menuHoteReservation = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        menuHeightWeight = new javax.swing.JMenu();
+        menuHotelReservation = new javax.swing.JMenu();
+        menuReport = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -36,7 +37,7 @@ public class MainMenu extends javax.swing.JFrame {
         dpShow.setLayout(dpShowLayout);
         dpShowLayout.setHorizontalGroup(
             dpShowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 838, Short.MAX_VALUE)
         );
         dpShowLayout.setVerticalGroup(
             dpShowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -51,40 +52,45 @@ public class MainMenu extends javax.swing.JFrame {
         jMenuBar1.setPreferredSize(new java.awt.Dimension(308, 40));
         jMenuBar1.setRequestFocusEnabled(false);
 
-        menuUsername.setBackground(new java.awt.Color(0, 0, 51));
-        menuUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/scales-3-fill.png"))); // NOI18N
-        menuUsername.setText("HeightWeight");
-        menuUsername.setFocusPainted(true);
-        menuUsername.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
-        menuUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        menuUsername.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        menuUsername.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        menuUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+        menuHeightWeight.setBackground(new java.awt.Color(0, 0, 51));
+        menuHeightWeight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/scales-3-fill.png"))); // NOI18N
+        menuHeightWeight.setText("HeightWeight");
+        menuHeightWeight.setFocusPainted(true);
+        menuHeightWeight.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        menuHeightWeight.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuHeightWeight.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        menuHeightWeight.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        menuHeightWeight.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuUsernameMouseClicked(evt);
+                menuHeightWeightMouseClicked(evt);
             }
         });
-        jMenuBar1.add(menuUsername);
+        jMenuBar1.add(menuHeightWeight);
 
-        menuHoteReservation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/hotel-line.png"))); // NOI18N
-        menuHoteReservation.setText("HotelReservation");
-        menuHoteReservation.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
-        menuHoteReservation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        menuHoteReservation.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        menuHoteReservation.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        menuHoteReservation.addMouseListener(new java.awt.event.MouseAdapter() {
+        menuHotelReservation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/hotel-line.png"))); // NOI18N
+        menuHotelReservation.setText("HotelReservation");
+        menuHotelReservation.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        menuHotelReservation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuHotelReservation.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        menuHotelReservation.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        menuHotelReservation.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuHoteReservationMouseClicked(evt);
+                menuHotelReservationMouseClicked(evt);
             }
         });
-        jMenuBar1.add(menuHoteReservation);
+        jMenuBar1.add(menuHotelReservation);
 
-        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/file-chart-line.png"))); // NOI18N
-        jMenu2.setText("Report");
-        jMenu2.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
-        jMenu2.setMargin(new java.awt.Insets(5, 12, 3, 12));
-        jMenu2.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jMenuBar1.add(jMenu2);
+        menuReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/file-chart-line.png"))); // NOI18N
+        menuReport.setText("Report");
+        menuReport.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        menuReport.setMargin(new java.awt.Insets(5, 12, 3, 12));
+        menuReport.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        menuReport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuReportMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuReport);
 
         setJMenuBar(jMenuBar1);
 
@@ -103,19 +109,26 @@ public class MainMenu extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuUsernameMouseClicked
-        frmWH = new FrmWeightHeight();
+    private void menuHeightWeightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuHeightWeightMouseClicked
+        frmWH = new FrmWeightHeight(); // สร้างอินสแตน
         dpShow.add(frmWH);
         frmWH.setVisible(true);
         frmWH.setSize(getSize());
-    }//GEN-LAST:event_menuUsernameMouseClicked
+    }//GEN-LAST:event_menuHeightWeightMouseClicked
 
-    private void menuHoteReservationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuHoteReservationMouseClicked
+    private void menuHotelReservationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuHotelReservationMouseClicked
         frmHR = new FrmHotelReservation();
         dpShow.add(frmHR);
         frmHR.setVisible(true);
         frmHR.setSize(getSize());
-    }//GEN-LAST:event_menuHoteReservationMouseClicked
+    }//GEN-LAST:event_menuHotelReservationMouseClicked
+
+    private void menuReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuReportMouseClicked
+        frmRep = new FrmReport();
+        dpShow.add(frmRep);
+        frmRep.setVisible(true);
+        frmRep.setSize(getSize());
+    }//GEN-LAST:event_menuReportMouseClicked
 
     /**
      * Method Main
@@ -148,16 +161,17 @@ public class MainMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                new MainMenu().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dpShow;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenu menuHoteReservation;
-    private javax.swing.JMenu menuUsername;
+    private javax.swing.JMenu menuHeightWeight;
+    private javax.swing.JMenu menuHotelReservation;
+    private javax.swing.JMenu menuReport;
     // End of variables declaration//GEN-END:variables
 }

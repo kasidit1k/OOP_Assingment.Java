@@ -3,7 +3,7 @@ package MiniProject;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 
-public class FrmStudent extends javax.swing.JInternalFrame {
+public class FrmStudent extends javax.swing.Frame {
 
     /* default Constructor */
     public FrmStudent() {
@@ -169,7 +169,9 @@ public class FrmStudent extends javax.swing.JInternalFrame {
         spnHeight.setValue(0);
         txtArea.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
-
+    public static void main(String[] args) {
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCalc;

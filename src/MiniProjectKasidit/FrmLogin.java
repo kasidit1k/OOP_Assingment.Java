@@ -155,23 +155,25 @@ public class FrmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String enterUser = txtUser.getText();
+        String enterUser = txtUser.getText(); // ดึงข้อมูลชื่อผู้ใช้และรหัสผ่านจากช่องป้อนข้อความ
         String enterPass = new String(txtPassword.getPassword());
-        if (enterUser.equals("") || enterPass.equals("")) {
+        if (enterUser.equals("") || enterPass.equals("")) { // ตรวจสอบว่าชื่อผู้ใช้หรือรหัสผ่านว่างเปล่า
             JLabel message = new JLabel("กรอกชื่อผู้ใช้หรือรหัสผ่านก่อนเข้าสู่ระบบ!");
             message.setFont(new Font("M", Font.PLAIN, 12));
             JOptionPane.showMessageDialog(this, message);
         } else {
-            String type_user;
+            String type_user = "";  // ข้อมูลถูกกรอกครบ
             String name;
             String password;
+            // SQL ดึงข้อมูลผู้ใช้จากฐานข้อมูล
             String selectSql = "select * from user where id = '" + enterUser + "' and password = '" + enterPass + "'";
             ResultSet rs = myDB.selectQueryData(selectSql);
             String userType = "";
             try {
-                while (rs.next()) {
+                while (rs.next()) { // อ่านข้อมูลผู้ใช้จาก ResultSet
                     userType = rs.getString("type");
                 }
+                // ตรวจสอบว่ามีผู้ใช้ที่ตรงกับข้อมูลที่ระบุ
                 if (!userType.equalsIgnoreCase("")) {
                     System.out.println("userType = " + userType);
                     MainMenu mf = new MainMenu();
@@ -182,15 +184,17 @@ public class FrmLogin extends javax.swing.JFrame {
                     message.setFont(new Font("", Font.PLAIN, 12));
                     JOptionPane.showMessageDialog(this, message);
                 }
-                rs.close();
+                rs.close(); // ปิด ResultSet
             } catch (SQLException e) {
-                System.out.println("Cannot get Data " + e);
+                JLabel message = new JLabel("ไม่สามารถรับข้อมูลได้!!!");
+                message.setFont(new Font("", Font.PLAIN, 12));
+                JOptionPane.showMessageDialog(this, message);   
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        
+
     }//GEN-LAST:event_txtPasswordActionPerformed
 
 

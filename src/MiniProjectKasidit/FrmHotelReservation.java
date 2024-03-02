@@ -19,7 +19,8 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         model = (DefaultTableModel) tblData.getModel();
         myDb = new MyDB();
         loadData();
-
+        
+        // buttonGroup จัดกลุ่ม JRadioButton ถ้าเลือกไป 1 ตัวอื่น ๆ ในกลุ่มเลือกไม่ได้แล้ว
         buttonGroup1 = new javax.swing.ButtonGroup();
         cbxWeek.addItem("Weekday (อา-พฤ)");
         cbxWeek.addItem("Weekend (ศ-ส)");
@@ -481,8 +482,8 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                     : cbxWeek.getSelectedIndex() == 1 ? 4690 : 5690;
         }
 
-        int numOfDays = (int) spnDay.getValue();
-        double totalPrice = rate * numOfDays;
+        int numOfDays = (int) spnDay.getValue(); // นับจำนวนวันที่ผู้ใช้เลือก   
+        double totalPrice = rate * numOfDays; 
 
         txtAreaShow.setText("ประเภทห้อง : " + roomType + "\n"
                 + "ช่วงที่เข้าพัก : " + cbxWeek.getSelectedItem().toString() + "\n"
