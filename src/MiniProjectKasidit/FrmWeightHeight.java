@@ -25,18 +25,23 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }
 
     private void loadStudentData() {
-        model.setRowCount(0); // เคลียร์ข้อมูลในตารางก่อน
+        model.setRowCount(0); // Clear data in the table
         String sql = "SELECT * FROM weight";
         ArrayList<StudentInfo> list = myDB.selectQuery(sql);
-        System.out.println(list.get(0));
+//        if (!list.isEmpty()) {
         for (StudentInfo info : list) {
             Object[] row = {
                 info.getId(),
                 info.getName(),
-                info.getSurname(), info.getWeight(), info.getHeight(), info.getWeightResult()};
+                info.getSurname(),
+                info.getWeight(),
+                info.getHeight(),
+                info.getWeightResult()
+            };
             model.addRow(row);
         }
         tblData.setModel(model);
+//        }
     }
 
     @SuppressWarnings("unchecked")
@@ -467,23 +472,21 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         double height = Double.parseDouble(txtHeight.getText()) / 100; // แปลงเป็นเมตร
         double bmi = weight / (height * height);
 
-        // ตรวจสอบเงื่อนไขและแสดงผลลัพธ์
-        if (bmi < 18.5) {
-            txtResult.setText("ปกติ");
+        String result;
+        if (bmi >= 0 && bmi <= 22) {
+            result = "ปกติ";
             txtResult.setBackground(Color.GREEN);
-        } else if (bmi >= 23 && bmi <= 25) {
-            txtResult.setText("ท้วม");
+        } else if (bmi > 22 && bmi <= 24) {
+            result = "ท้วม";
             txtResult.setBackground(Color.YELLOW);
-        } else if (bmi >= 25 && bmi <= 30) {
-            txtResult.setText("อ้วนระดับ1");
+        } else if (bmi > 24 && bmi <= 29) {
+            result = "อ้วนระดับ1";
             txtResult.setBackground(Color.PINK);
-        } else if (bmi > 30) {
-            txtResult.setText("อ้วนระดับ2");
-            txtResult.setBackground(Color.RED);
         } else {
-            txtResult.setText("อ้วนระดับ 2");
+            result = "อ้วนระดับ2";
             txtResult.setBackground(Color.RED);
         }
+        txtResult.setText(result);
     }//GEN-LAST:event_btnCalc1ActionPerformed
 
     private void txtHeightKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHeightKeyTyped
@@ -510,8 +513,8 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int row = tblData.getSelectedRow();
         if (row >= 0) {
-            String id = (String) tblData.getValueAt(row, 0);
-            String delete = "DELETE FROM weight where id = " + id;
+            String idDel = (String) tblData.getValueAt(row, 0);
+            String delete = "DELETE FROM weight where id = " + idDel;
             System.out.println("Delete" + delete);
             int delrow = myDB.stmtCreInsUpdDel(delete);
             if (delrow > 0) {
@@ -556,6 +559,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
         String idAdd = txtId.getText();
         String nameAdd = txtName.getText();
@@ -589,7 +593,24 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tblDataMouseDragged
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-//        getSelectedRowAndSetToTextField();
+        int row = tblData.getSelectedRow();
+        if (row >= 0) {
+            if (row >= 0) {
+                String idData = String.valueOf(tblData.getValueAt(row, 0));
+                String nameData = (String) tblData.getValueAt(row, 1);
+                String surnameData = (String) tblData.getValueAt(row, 2);
+                double weightData = (double) tblData.getValueAt(row, 3);
+                double heightData = (double) tblData.getValueAt(row, 4);
+                String weightResultData = (String)tblData.getValueAt(row, 5);
+
+                txtId.setText(idData);
+                txtName.setText(nameData);
+                txtSurname.setText(surnameData);
+                txtWeight.setText(String.valueOf(weightData));
+                txtHeight.setText(String.valueOf(heightData));
+                txtResult.setText(weightResultData);
+            }
+        }
     }//GEN-LAST:event_tblDataMouseClicked
 
 

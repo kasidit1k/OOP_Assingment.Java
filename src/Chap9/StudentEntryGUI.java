@@ -282,7 +282,7 @@ public class StudentEntryGUI extends javax.swing.JFrame {
         String update = "update studentd set name = '" + nameUpd + "', surname = '" + surnameUpd + "' where id = " + idUpd;
         System.out.println("update = " + update);
 
-        int updRow = myDB.stmtCreInsUpdDel(update); //
+        int updRow = myDB.stmtCreInsUpdDel(update); 
         if (updRow > 0) {
             tblData.setValueAt(nameUpd, row, 1);
             tblData.setValueAt(surnameUpd, row, 2);
@@ -291,6 +291,8 @@ public class StudentEntryGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    
+    
     /**
      * @param args the command line arguments
      */

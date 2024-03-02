@@ -489,7 +489,9 @@
                   <Font name="TH Baijam" size="18" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="&#xe40;&#xe25;&#xe37;&#xe2d;&#xe01;&#xe0a;&#xe48;&#xe27;&#xe07;&#xe40;&#xe27;&#xe25;&#xe32;"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
