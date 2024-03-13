@@ -1,6 +1,6 @@
 
-package MiniProjectKasidit;
-public class StudentInfo {
+package MiniProjectKasidit.info;
+public class HeightWeightInfo {
     private String id;
     private String name;
     private String surname;

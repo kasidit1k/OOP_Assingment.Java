@@ -1,9 +1,10 @@
-package MiniProjectKasidit;
+package MiniProjectKasidit.MySQlDatabase;
 
+import MiniProjectKasidit.info.HotelReserverInfo;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class MyDB {
+public class ConnecMySQL {
 
     Connection conn;
     Statement stmt;
@@ -48,15 +49,15 @@ public class MyDB {
         }
     }
 
-    public ArrayList<HotelReserver> selectQuery(String sql) {
-        HotelReserver hrs;
+    public ArrayList<HotelReserverInfo> selectQuery(String sql) {
+        HotelReserverInfo hrs;
         try {
             conn = connect();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            ArrayList<HotelReserver> hotelReserversList = new ArrayList<>();
+            ArrayList<HotelReserverInfo> hotelReserversList = new ArrayList<>();
             while (rs.next()) {
-                hrs = new HotelReserver();
+                hrs = new HotelReserverInfo();
                 hrs.setId(rs.getInt(1));
                 hrs.setName(rs.getString(2));
                 hrs.setSurname(rs.getString(3));
@@ -83,8 +84,8 @@ public class MyDB {
                     conn.close();
                 }
             } catch (Exception ex) {
-                // ตรวจสอบข้อผิดพลาดการปิดการเชื่อมต่อ
-                System.out.println("Error closing resources: " + ex);
+
+                System.out.println("เกิดข้อผิดพลาดในการปิดทรัพยากร : " + ex);
             }
         }
     }
@@ -103,7 +104,7 @@ public class MyDB {
     }
 
     public static void main(String[] args) {
-        MyDB db = new MyDB();
+        ConnecMySQL db = new ConnecMySQL();
         Connection cc = db.connect();
         System.out.println("con = " + cc);
     }

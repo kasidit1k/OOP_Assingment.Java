@@ -1,14 +1,15 @@
 package MiniProjectKasidit;
 
+import MiniProjectKasidit.JInternalFrame.FrmReport;
+import MiniProjectKasidit.JInternalFrame.FrmWeightHeight;
+import MiniProjectKasidit.JInternalFrame.FrmHotelReservation;
+
 public class MainMenu extends javax.swing.JFrame {
-    // Variable \\
+
     FrmHotelReservation frmHR;
     FrmWeightHeight frmWH;
     FrmReport frmRep;
-
-                                                                                                       /*
-     ---> Overload Constructor <---
-                                                                                                       */
+                                                                                                                                                                                        
     public MainMenu() {
         initComponents();
     }
@@ -53,7 +54,7 @@ public class MainMenu extends javax.swing.JFrame {
         jMenuBar1.setRequestFocusEnabled(false);
 
         menuHeightWeight.setBackground(new java.awt.Color(0, 0, 51));
-        menuHeightWeight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/scales-3-fill.png"))); // NOI18N
+        menuHeightWeight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/scales-2-fill.png"))); // NOI18N
         menuHeightWeight.setText("HeightWeight");
         menuHeightWeight.setFocusPainted(true);
         menuHeightWeight.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
@@ -98,11 +99,11 @@ public class MainMenu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dpShow)
+            .addComponent(dpShow, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dpShow)
+            .addComponent(dpShow, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -110,7 +111,7 @@ public class MainMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuHeightWeightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuHeightWeightMouseClicked
-        frmWH = new FrmWeightHeight(); // สร้างอินสแตน
+        frmWH = new FrmWeightHeight(); 
         dpShow.add(frmWH);
         frmWH.setVisible(true);
         frmWH.setSize(getSize());

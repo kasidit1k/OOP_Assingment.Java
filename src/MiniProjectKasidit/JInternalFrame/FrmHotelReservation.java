@@ -1,6 +1,9 @@
-package MiniProjectKasidit;
+package MiniProjectKasidit.JInternalFrame;
 
+import MiniProjectKasidit.info.HotelReserverInfo;
+import MiniProjectKasidit.MySQlDatabase.ConnecMySQL;
 import java.awt.Font;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -11,16 +14,17 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
     private final javax.swing.ButtonGroup buttonGroup1;
 
     DefaultTableModel model;
-    MyDB myDb;
-    String id, name, surname;
+    ConnecMySQL conMyDB;
 
     public FrmHotelReservation() {
         initComponents();
         model = (DefaultTableModel) tblData.getModel();
-        myDb = new MyDB();
-        loadData();
-        
-        // buttonGroup จัดกลุ่ม JRadioButton ถ้าเลือกไป 1 ตัวอื่น ๆ ในกลุ่มเลือกไม่ได้แล้ว
+        conMyDB = new ConnecMySQL();
+        loadDataCustomer();
+
+        tblData.getTableHeader().setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        tblData.setAutoCreateRowSorter(true);
+
         buttonGroup1 = new javax.swing.ButtonGroup();
         cbxWeek.addItem("Weekday (อา-พฤ)");
         cbxWeek.addItem("Weekend (ศ-ส)");
@@ -28,19 +32,28 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         buttonGroup1.add(rdbSuperior);
         buttonGroup1.add(rdbDeluxe);
         buttonGroup1.add(rdbGrandDeluxe);
-        buttonGroup1.add(rdbJuniorSuit);
+        buttonGroup1.add(rdbJuniorSuite);
         buttonGroup1.add(rdbGrandFamilySuite);
     }
 
-    private void loadData() {
-        model.setRowCount(0); // เคลียร์ข้อมูลในตารางก่อน
-        String sql = "SELECT * FROM room ORDER BY id";
-        ArrayList<HotelReserver> list = myDb.selectQuery(sql);
-        for (HotelReserver info : list) {
-            Object[] row = {info.getId(), info.getName(), info.getSurname(), info.getRoomtype(), info.getPeriod(), info.getDayscount(), info.getTotalprice()};
+    private void loadDataCustomer() {
+        model.setRowCount(0);
+        String sql = "SELECT * FROM hotel ORDER BY id";
+        ArrayList<HotelReserverInfo> list = conMyDB.selectQuery(sql);  
+        for (HotelReserverInfo info : list) { 
+            Object[] row = {info.getId(), info.getName(), info.getSurname(), info.getRoomtype(), info.getPeriod(), info.getDayscount(), info.getTotalprice()}; // สร้างอ็อปเจกต์เพื่อกำหนดแถวในตาราง
             model.addRow(row);
         }
         tblData.setModel(model);
+    }
+
+    private void clearData() {
+        txtId.setText("");
+        txtName.setText("");
+        txtSurname.setText("");
+        buttonGroup1.clearSelection();
+        cbxWeek.setSelectedIndex(0);
+        spnDay.setValue(1);
     }
 
     @SuppressWarnings("unchecked")
@@ -55,7 +68,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         rdbSuperior = new javax.swing.JRadioButton();
         rdbDeluxe = new javax.swing.JRadioButton();
         rdbGrandDeluxe = new javax.swing.JRadioButton();
-        rdbJuniorSuit = new javax.swing.JRadioButton();
+        rdbJuniorSuite = new javax.swing.JRadioButton();
         rdbGrandFamilySuite = new javax.swing.JRadioButton();
         btnCalc = new javax.swing.JButton();
         Exit = new javax.swing.JButton();
@@ -74,6 +87,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         spnDay = new javax.swing.JSpinner();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
         btnAddData = new javax.swing.JButton();
@@ -117,7 +131,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "จำนวนห้องพัก", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("TH Baijam", 1, 18), new java.awt.Color(51, 51, 51))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "จำนวนห้องพัก", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("TH Baijam", 1, 18), new java.awt.Color(51, 51, 51))); // NOI18N
         jPanel3.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
 
         rdbSuperior.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
@@ -129,8 +143,8 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         rdbGrandDeluxe.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
         rdbGrandDeluxe.setText("Grand Deluxe");
 
-        rdbJuniorSuit.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
-        rdbJuniorSuit.setText("Junior Suit");
+        rdbJuniorSuite.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        rdbJuniorSuite.setText("Junior Suite");
 
         rdbGrandFamilySuite.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
         rdbGrandFamilySuite.setText("Grand Family Suite");
@@ -146,14 +160,14 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdbGrandFamilySuite)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(rdbDeluxe)
-                                .addGap(42, 42, 42)
-                                .addComponent(rdbJuniorSuit)))
+                                .addComponent(rdbGrandDeluxe)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rdbJuniorSuite)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdbSuperior)
-                            .addComponent(rdbGrandDeluxe))
+                            .addComponent(rdbDeluxe))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -161,11 +175,11 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(rdbSuperior)
                 .addGap(18, 18, 18)
-                .addComponent(rdbGrandDeluxe)
+                .addComponent(rdbDeluxe)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rdbDeluxe)
-                    .addComponent(rdbJuniorSuit))
+                    .addComponent(rdbJuniorSuite)
+                    .addComponent(rdbGrandDeluxe))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(rdbGrandFamilySuite)
                 .addGap(17, 17, 17))
@@ -195,10 +209,10 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             }
         });
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "กรอกข้อมูล", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("TH Baijam", 1, 18))); // NOI18N
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "กรอกข้อมูล", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("TH Baijam", 1, 18))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
-        jLabel1.setText("รหัส");
+        jLabel1.setText("รหัสลูกค้า");
 
         jLabel2.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
         jLabel2.setText("ชื่อ");
@@ -207,6 +221,14 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         jLabel3.setText("นามสกุล");
 
         txtId.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIdKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
+            }
+        });
 
         txtName.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
 
@@ -219,14 +241,14 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel2)
                         .addGap(26, 26, 26))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
                         .addGap(18, 18, 18)))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,6 +286,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         cbxWeek.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "เลือกช่วงเวลา" }));
 
         spnDay.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
+        spnDay.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -272,10 +295,10 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnDay, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -297,40 +320,38 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Exit))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(Exit)
+                        .addGap(23, 23, 23))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Exit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 55, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
@@ -347,7 +368,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Name", "Surname", "RoomType", "Period", "NumberOfDay", "TotalPrice"
+                "รหัสลูกค้า", "ชื่อ", "นามกสุล", "ประเภทห้อง", "ช่วงที่เข้าพัก", "จำนวนวัน", "ราคารวม"
             }
         ) {
             Class[] types = new Class [] {
@@ -358,6 +379,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                 return types [columnIndex];
             }
         });
+        tblData.setInheritsPopupMenu(true);
         tblData.setShowGrid(true);
         tblData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -366,18 +388,22 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(tblData);
 
+        jScrollPane3.setViewportView(jScrollPane2);
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         btnAddData.setFont(new java.awt.Font("TH Baijam", 1, 18)); // NOI18N
@@ -410,26 +436,26 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -446,54 +472,61 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(443, Short.MAX_VALUE))
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcActionPerformed
-        String roomType = "Coeioe";
+        String roomType = "";
         int rate = 0;
-
-        if (rdbSuperior.isSelected()) {
+        if (rdbSuperior.isSelected()) {  
             roomType = "Superior";
-            rate = cbxWeek.getSelectedIndex() == 0 ? 2090
-                    : cbxWeek.getSelectedIndex() == 1 ? 2490 : 3390;
+            rate = cbxWeek.getSelectedIndex() == 1 ? 2090 
+                    : cbxWeek.getSelectedIndex() == 2 ? 2490
+                    : 3390;
         } else if (rdbDeluxe.isSelected()) {
             roomType = "Deluxe";
-            rate = cbxWeek.getSelectedIndex() == 0 ? 2290
-                    : cbxWeek.getSelectedIndex() == 1 ? 2790 : 2690;
+            rate = cbxWeek.getSelectedIndex() == 1 ? 2290
+                    : cbxWeek.getSelectedIndex() == 2 ? 2790
+                    : 3690;
         } else if (rdbGrandDeluxe.isSelected()) {
-            roomType = "Grand Deluxe";
-            rate = cbxWeek.getSelectedIndex() == 0 ? 3890
-                    : cbxWeek.getSelectedIndex() == 1 ? 4490 : 5390;
-        } else if (rdbJuniorSuit.isSelected()) {
-            roomType = "Junior Suit";
-            rate = cbxWeek.getSelectedIndex() == 0 ? 3190
-                    : cbxWeek.getSelectedIndex() == 1 ? 3890 : 4790;
+            roomType = "Grand Deluxe"; //แกรนด์ เดลักซ์
+            rate = cbxWeek.getSelectedIndex() == 1 ? 3890
+                    : cbxWeek.getSelectedIndex() == 2 ? 4490
+                    : 5390;
+        } else if (rdbJuniorSuite.isSelected()) {
+            roomType = "Junior Suite"; 
+            rate = cbxWeek.getSelectedIndex() == 1 ? 3190
+                    : cbxWeek.getSelectedIndex() == 2 ? 3890
+                    : 4790;
         } else if (rdbGrandFamilySuite.isSelected()) {
             roomType = "Grand Family Suite";
-            rate = cbxWeek.getSelectedIndex() == 0 ? 3990
-                    : cbxWeek.getSelectedIndex() == 1 ? 4690 : 5690;
+            rate = cbxWeek.getSelectedIndex() == 1 ? 4690
+                    : cbxWeek.getSelectedIndex() == 2 ? 5590
+                    : 6490;
         }
 
-        int numOfDays = (int) spnDay.getValue(); // นับจำนวนวันที่ผู้ใช้เลือก   
-        double totalPrice = rate * numOfDays; 
+        int numOfDays = (int) spnDay.getValue(); 
+        double totalPrice = rate * numOfDays;
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTotalPrice = decimalFormat.format(totalPrice); 
 
         txtAreaShow.setText("ประเภทห้อง : " + roomType + "\n"
                 + "ช่วงที่เข้าพัก : " + cbxWeek.getSelectedItem().toString() + "\n"
                 + "จำนวนวันเข้าพัก : " + numOfDays + "\n"
-                + "รวมราคา : " + totalPrice + " บาท");
+                + "รวมราคา : " + formattedTotalPrice + " บาท");
     }//GEN-LAST:event_btnCalcActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
-        String message = "Do you want to exit the program";
-        String text1 = "Confirm exti from the program ";
+        JLabel message = new JLabel("คุณต้องการออกจากโปรแกรม");
+        message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        String text1 = "ยืนยันการออกจากโปรแกรม ";
         int option = JOptionPane.showConfirmDialog(rootPane, message, text1,
                 JOptionPane.YES_NO_CANCEL_OPTION);
         if (option == JOptionPane.YES_OPTION) {
@@ -506,10 +539,13 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
         cbxWeek.setSelectedIndex(0);
         spnDay.setValue(0);
         txtAreaShow.setText("");
+        txtId.setText("");
+        txtName.setText("");
+        txtSurname.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
-        int idAdd = Integer.parseInt(txtId.getText());
+        int idAdd = Integer.parseInt(txtId.getText()); //เก็บข้อมูลที่ถูกแปลงมาจาก txtId
         String nameAdd = txtName.getText();
         String surnameAdd = txtSurname.getText();
         String roomtype = "";
@@ -519,44 +555,61 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
             roomtype = "Grand Deluxe";
         } else if (rdbDeluxe.isSelected()) {
             roomtype = "Deluxe";
-        } else if (rdbJuniorSuit.isSelected()) {
+        } else if (rdbJuniorSuite.isSelected()) {
             roomtype = "Junior Suite";
         } else if (rdbGrandFamilySuite.isSelected()) {
             roomtype = "Grand Family Suite";
         }
 
-        String period = cbxWeek.getSelectedItem().toString();
-        /*  spnDay */
+        String period = cbxWeek.getSelectedItem().toString();  
         int dayscount = (int) spnDay.getValue();
 
-        double pricePerDay = 0;
+       
+        int rate = 0;
         if (roomtype.equals("Superior")) {
-            pricePerDay = (period.equals("Weekend")) ? 2490 : (period.equals("Long Weekend")) ? 3390 : 2090;
+            rate = (period.equals("Weekend")) ? 2090
+                    : (period.equals("Long Weekend")) ? 3390
+                    : 2490;
         } else if (roomtype.equals("Deluxe")) {
-            pricePerDay = (period.equals("Weekend")) ? 2790 : (period.equals("Long Weekend")) ? 2690 : 2290;
+            rate = (period.equals("Weekend")) ? 2290
+                    : (period.equals("Long Weekend")) ? 3690
+                    : 2790;
         } else if (roomtype.equals("Grand Deluxe")) {
-            pricePerDay = (period.equals("Weekend")) ? 4490 : (period.equals("Long Weekend")) ? 5390 : 3890;
+            rate = (period.equals("Weekend")) ? 3890
+                    : (period.equals("Long Weekend")) ? 5390
+                    : 4490;
         } else if (roomtype.equals("Junior Suite")) {
-            pricePerDay = (period.equals("Weekend")) ? 3890 : (period.equals("Long Weekend")) ? 4790 : 3190;
+            rate = (period.equals("Weekend")) ? 3190
+                    : (period.equals("Long Weekend")) ? 4790
+                    : 3890;
         } else if (roomtype.equals("Grand Family Suite")) {
-            pricePerDay = (period.equals("Weekend")) ? 4690 : (period.equals("Long Weekend")) ? 5590 : 6490;
+            rate = (period.equals("Weekend")) ? 4690
+                    : (period.equals("Long Weekend")) ? 6490
+                    : 5590;
         }
+        double totalprice = rate * dayscount; 
 
-        // Calculate total price
-        double totalprice = dayscount * pricePerDay;
-
-        if (name.length() > 1 && surname.length() > 2) {
-            String insert = "INSERT INTO room VALUES(" + id + ",'" + name + "','" + surname + "','" + roomtype + "','" + period + "'," + dayscount + "," + totalprice + ")";
-            System.out.println("insert = " + insert);
-            int row = myDb.stmtCreInsUpdDel(insert);
-            if (row > 0) {
-                Object[] rowData = {idAdd, nameAdd, surnameAdd, roomtype, period, dayscount, totalprice};
-                model.addRow(rowData);
-                JLabel message = new JLabel("เพิ่มข้อมูลสำเร็จ");
-                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                JOptionPane.showMessageDialog(this, message);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Add Error");
+        if (nameAdd.length() > 1 && surnameAdd.length() > 2) { 
+            JLabel messageAdd = new JLabel("คุณต้องการเพิ่มข้อมูลหรือไม่ ? "); 
+            messageAdd.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            String text1 = "ยืนยันการเพิ่มข้อมูล ";
+            int option = JOptionPane.showConfirmDialog(rootPane, messageAdd, text1,
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            if (option == JOptionPane.YES_OPTION) {  
+                String insert = "INSERT INTO hotel VALUES(" + idAdd + ",'" + nameAdd + "','" + surnameAdd + "','" + roomtype + "','" + period + "'," + dayscount + "," + totalprice + ")";
+                System.out.println("insert = " + insert);
+                int row = conMyDB.stmtCreInsUpdDel(insert);
+                if (row > 0) {
+                    Object[] rowData = {idAdd, nameAdd, surnameAdd, roomtype, period, dayscount, totalprice};
+                    model.addRow(rowData);
+                    JLabel message = new JLabel("เพิ่มข้อมูลสำเร็จ");
+                    getToolkit().beep();
+                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                    JOptionPane.showMessageDialog(this, message);
+                    clearData();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "เพิ่มข้อมูลไม่สำเร็จ");
+                }
             }
         } else {
             JLabel message = new JLabel("กรอกข้อมูลให้ครบถ้วน!");
@@ -566,108 +619,145 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnAddDataActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        int selectedRow = tblData.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = (int) tblData.getValueAt(selectedRow, 0);
+        int[] selectedRows = tblData.getSelectedRows(); 
+        if (selectedRows.length > 0) { 
+            JLabel messageout = new JLabel("คุณต้องการลบข้อมูลหรือไม่ ? ");
+            messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            String text = "ยืนการลบข้อมูล";
+            int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            if (option == JOptionPane.YES_OPTION) { 
+                for (int i = selectedRows.length - 1; i >= 0; i--) { 
+                    int idDel = (int) tblData.getValueAt(selectedRows[i], 0);
+                    String delete = "DELETE FROM hotel WHERE id=" + idDel;
+                    System.out.println("delete = " + delete);
+                    int row = conMyDB.stmtCreInsUpdDel(delete);
 
-            String delete = "DELETE FROM room WHERE id=" + id;
-            System.out.println("delete = " + delete);
-            int row = myDb.stmtCreInsUpdDel(delete);
-
-            if (row > 0) {
-                model.removeRow(selectedRow);
-
-                JLabel message = new JLabel("ลบข้อมูลสำเร็จ");
+                    if (row > 0) {
+                        model.removeRow(selectedRows[i]);
+                    }
+                }
+                JLabel message = new JLabel("ลบข้อมูลสำเร็จ"); 
                 message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
                 JOptionPane.showMessageDialog(this, message);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Delete Error");
             }
         } else {
-            JLabel message = new JLabel("กรุณาเลือกข้อมูลที่ต้องการลบ");
+            JLabel message = new JLabel("กรุณาเลือกข้อมูลที่ต้องการลบ"); 
             message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
             JOptionPane.showMessageDialog(this, message);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private int calculateRate(String roomType, int weekIndex) {
+        int rate = 0;
+        //ตรวจสอบประเภทห้อง
+        switch (roomType) {
+            case "Superior":
+                rate = weekIndex == 1 ? 2090 : weekIndex == 2 ? 2490 : 3390;
+                break;
+            case "Deluxe":
+                rate = weekIndex == 1 ? 2290 : weekIndex == 2 ? 2790 : 3690;
+                break;
+            case "Grand Deluxe":
+                rate = weekIndex == 1 ? 3890 : weekIndex == 2 ? 4490 : 5390;
+                break;
+            case "Junior Suit":
+                rate = weekIndex == 1 ? 3190 : weekIndex == 2 ? 3890 : 4790;
+                break;
+            case "Grand Family Suite":
+                rate = weekIndex == 1 ? 4690 : weekIndex == 2 ? 5590 : 6490;
+                break;
+        }
+        return rate;
+    }
 
-        int selectedRow = tblData.getSelectedRow();
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        int selectedRow = tblData.getSelectedRow(); 
         if (selectedRow != -1) {
-            int idUpd = (int) tblData.getValueAt(selectedRow, 0);
+            int idUpd = (int) tblData.getValueAt(selectedRow, 0); 
             String nameUpd = txtName.getText();
             String surnameUpd = txtSurname.getText();
-            String roomtype = "";
-
+            
+            //กำหนดประเภทห้องตามประเภทที่เลือกโดยใช้ JRadioButton
+            String roomtype = "";   
             if (rdbSuperior.isSelected()) {
                 roomtype = "Superior";
             } else if (rdbDeluxe.isSelected()) {
                 roomtype = "Deluxe";
             } else if (rdbGrandDeluxe.isSelected()) {
                 roomtype = "Grand Deluxe";
-            } else if (rdbJuniorSuit.isSelected()) {
-                roomtype = "Junior Suite";
+            } else if (rdbJuniorSuite.isSelected()) {
+                roomtype = "Junior Suit";
             } else if (rdbGrandFamilySuite.isSelected()) {
                 roomtype = "Grand Family Suite";
             }
 
             String period = cbxWeek.getSelectedItem().toString();
-            int dayscount = (int) spnDay.getValue();
+            int dayscount = (int) spnDay.getValue();  //ดึงจำนวนวันที่ถูกเลือกจาก JSpinner
 
-            double pricePerDay = 0;
-            if (roomtype.equals("Superior")) {
-                pricePerDay = (period.equals("Weekend")) ? 2490 : (period.equals("Long Weekend")) ? 3390 : 2090;
-            } else if (roomtype.equals("Deluxe")) {
-                pricePerDay = (period.equals("Weekend")) ? 2790 : (period.equals("Long Weekend")) ? 2690 : 2290;
-            } else if (roomtype.equals("Grand Deluxe")) {
-                pricePerDay = (period.equals("Weekend")) ? 4490 : (period.equals("Long Weekend")) ? 5390 : 3890;
-            } else if (roomtype.equals("Junior Suite")) {
-                pricePerDay = (period.equals("Weekend")) ? 3890 : (period.equals("Long Weekend")) ? 4790 : 3190;
-            } else if (roomtype.equals("Grand Family Suite")) {
-                pricePerDay = (period.equals("Weekend")) ? 4690 : (period.equals("Long Weekend")) ? 5590 : 6490;
-            }
-            double totalprice = dayscount * pricePerDay;
+            int rate = calculateRate(roomtype, cbxWeek.getSelectedIndex());
+            double totalprice = dayscount * rate;
+            JLabel messageout = new JLabel("คุณต้องการอัพเดตข้อมูลหรือไม่ ? ");
+            messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            String text = "ยืนการอัพเดตข้อมูล";
+            int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                if (nameUpd.length() > 1 && surnameUpd.length() > 2) {  
+                    String update = "UPDATE hotel SET name='" + nameUpd + "', surname='" + surnameUpd + "', roomtype='" + roomtype + "', period='" + period + "', dayscount=" + dayscount + ", totalprice=" + totalprice + " WHERE id=" + idUpd;
+                    System.out.println("update = " + update); 
+                    int row = conMyDB.stmtCreInsUpdDel(update);
 
-            if (nameUpd.length() > 1 && surnameUpd.length() > 2) {
-                String update = "UPDATE room SET name='" + nameUpd + "', surname='" + surnameUpd + "', roomtype='" + roomtype + "', period='" + period + "', dayscount=" + dayscount + ", totalprice=" + totalprice + " WHERE id=" + idUpd;
-                System.out.println("update = " + update);
-                int row = myDb.stmtCreInsUpdDel(update);
+                    if (row > 0) {
+                        tblData.setValueAt(nameUpd, selectedRow, 1);
+                        tblData.setValueAt(surnameUpd, selectedRow, 2);
+                        tblData.setValueAt(roomtype, selectedRow, 3);
+                        tblData.setValueAt(period, selectedRow, 4);
+                        tblData.setValueAt(dayscount, selectedRow, 5);
+                        tblData.setValueAt(totalprice, selectedRow, 6);
 
-                if (row > 0) {
-//                    Object[] rowData = {idUpd, nameUpd, surnameUpd, roomtype, period, dayscount, totalprice};
-//                    model.addRow(rowData);
-                    tblData.setValueAt(nameUpd, selectedRow, 1);
-                    tblData.setValueAt(surnameUpd, selectedRow, 2);
-                    tblData.setValueAt(roomtype, selectedRow, 3);
-                    tblData.setValueAt(period, selectedRow, 4);
-                    tblData.setValueAt(dayscount, selectedRow, 5);
-                    tblData.setValueAt(totalprice, selectedRow, 6);
-                    
-                    JLabel message = new JLabel("อัพเดตสำเร็จ");
-                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                    JOptionPane.showMessageDialog(this, message);
-                } else {
-                    JLabel message = new JLabel("กรอกข้อมูลให้ครบถ้วน!");
-                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                    JOptionPane.showMessageDialog(this, message);
+                        JLabel message = new JLabel("อัพเดตสำเร็จ");
+                        message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                        JOptionPane.showMessageDialog(this, message);
+                        
+                        clearData();
+                    } else {
+                        JLabel message = new JLabel("กรอกข้อมูลให้ครบถ้วน!");
+                        message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                        JOptionPane.showMessageDialog(this, message);
+                    }
                 }
             }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
-
-
+    
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-        int row = tblData.getSelectedRow();
-        if (row >= 0) {
+        int row = tblData.getSelectedRow(); //ดึงข้อมูลแถวที่ถูกเลือก
+        JLabel messageout = new JLabel("คุณต้องการเลือกข้อมูอหรือไม่ ? ");
+        messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        String text = "ยืนยันการเลือกแถว";
+        int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
             if (row >= 0) {
-                String idData = String.valueOf(tblData.getValueAt(row, 0));
+                String idData = String.valueOf(tblData.getValueAt(row, 0)); //ดึงข้อมูลจากแถวที่เลือก
                 String nameData = (String) tblData.getValueAt(row, 1);
                 String surnameData = (String) tblData.getValueAt(row, 2);
                 String roomtypeData = (String) tblData.getValueAt(row, 3);
                 String periodData = (String) tblData.getValueAt(row, 4);
                 int dayscountData = (int) tblData.getValueAt(row, 5);
 
-                txtId.setText(idData);
+                Object totalpriceObject = tblData.getValueAt(row, 6);
+                int totalpriceData;
+                if (totalpriceObject instanceof Integer) {
+                    totalpriceData = (int) totalpriceObject;
+                } else if (totalpriceObject instanceof Double aDouble) {
+                    totalpriceData = aDouble.intValue();
+                } else {
+                    totalpriceData = 0;
+                }
+
+                txtId.setText(idData); // ตั้งค่าข้อความในองค์ประกอบ GUI:
                 txtName.setText(nameData);
                 txtSurname.setText(surnameData);
                 switch (roomtypeData) {
@@ -681,7 +771,7 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                         rdbGrandDeluxe.setSelected(true);
                         break;
                     case "Junior Suite":
-                        rdbJuniorSuit.setSelected(true);
+                        rdbJuniorSuite.setSelected(true);
                         break;
                     case "Grand Family Suite":
                         rdbGrandFamilySuite.setSelected(true);
@@ -689,11 +779,32 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
                     default:
                         break;
                 }
-                cbxWeek.setSelectedItem(periodData);
-                spnDay.setValue(dayscountData);
+                cbxWeek.setSelectedItem(periodData); //set ค่าให้ combo Box. มีช่วงที่ถูกเลือกเป็น periodData ที่ได้จากข้อมูลของแถวที่ถุกเลือกในตาราง
+                spnDay.setValue(dayscountData);  //จะตั้งค่าให้ Spinner มีค่าที่ถูกเลือกเป็น dayscountData ที่ได้จากข้อมูลของแถวที่ถูกเลือกในตาราง
+
+                // อัปเดต txtResult ด้วยข้อมูลที่เลือก
+                String resultText = "ประเภทห้องพัก : " + roomtypeData + "\n"
+                        + "ช่วงที่เข้าพัก : " + periodData + "\n"
+                        + "จำนวนวันที่เข้าพัก : " + dayscountData + "\n"
+                        + "ราคารวม : " + totalpriceData;
+
+                txtAreaShow.setText(resultText);
             }
         }
     }//GEN-LAST:event_tblDataMouseClicked
+
+    private void txtIdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyPressed
+
+    }//GEN-LAST:event_txtIdKeyPressed
+
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+        char c = evt.getKeyChar();
+        if (!((c >= '0') && (c <= '9') || (c <= '.') || (c == java.awt.event.KeyEvent.VK_BACK_SPACE)
+                || (c == java.awt.event.KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -718,10 +829,11 @@ public class FrmHotelReservation extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JRadioButton rdbDeluxe;
     private javax.swing.JRadioButton rdbGrandDeluxe;
     private javax.swing.JRadioButton rdbGrandFamilySuite;
-    private javax.swing.JRadioButton rdbJuniorSuit;
+    private javax.swing.JRadioButton rdbJuniorSuite;
     private javax.swing.JRadioButton rdbSuperior;
     private javax.swing.JSpinner spnDay;
     private javax.swing.JTable tblData;

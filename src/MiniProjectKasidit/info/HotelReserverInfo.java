@@ -1,8 +1,8 @@
 
-package MiniProjectKasidit;
+package MiniProjectKasidit.info;
 
 
-public class HotelReserver {
+public class HotelReserverInfo {
     private int id;
     private String name;
     private String surname;

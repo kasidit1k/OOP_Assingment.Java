@@ -1,5 +1,7 @@
-package MiniProjectKasidit;
+package MiniProjectKasidit.JInternalFrame;
 
+import MiniProjectKasidit.MySQlDatabase.MySQLDB;
+import MiniProjectKasidit.info.HeightWeightInfo;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JOptionPane;
@@ -11,25 +13,22 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
 
     DefaultTableModel model;
     MySQLDB myDB;
-    int select;
-    String id, name, surname;
 
-    /*
-         Default Constructor
-     */
     public FrmWeightHeight() {
         initComponents();
         model = (DefaultTableModel) tblData.getModel();
         myDB = new MySQLDB();
         loadStudentData();
+
+        tblData.getTableHeader().setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        tblData.setAutoCreateRowSorter(true);
     }
 
     private void loadStudentData() {
-        model.setRowCount(0); // Clear data in the table
-        String sql = "SELECT * FROM weight";
-        ArrayList<StudentInfo> list = myDB.selectQuery(sql);
-//        if (!list.isEmpty()) {
-        for (StudentInfo info : list) {
+        model.setRowCount(0);
+        String selectSql = "SELECT * FROM weight ORDER BY id";
+        ArrayList<HeightWeightInfo> list = myDB.selectQuery(selectSql);
+        for (HeightWeightInfo info : list) {
             Object[] row = {
                 info.getId(),
                 info.getName(),
@@ -41,7 +40,17 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
             model.addRow(row);
         }
         tblData.setModel(model);
-//        }
+    }
+
+    private void clearData() {
+        txtWeight.setText("");
+        txtHeight.setText("");
+        txtResult.setText("");
+        txtResult.setBackground(Color.white);
+        txtId.setText("");
+        txtName.setText("");
+        txtSurname.setText("");
+        txtResult.setText("");
     }
 
     @SuppressWarnings("unchecked")
@@ -61,8 +70,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtResult = new javax.swing.JTextArea();
+        txtResult = new javax.swing.JTextField();
         btnCalc1 = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
@@ -75,6 +83,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         jLabel11 = new javax.swing.JLabel();
         btnAddData = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
 
@@ -116,6 +125,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
 
         txtWeight.setBackground(new Color(0,0,0,0));
         txtWeight.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        txtWeight.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtWeight.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)));
         txtWeight.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -125,6 +135,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
 
         txtHeight.setBackground(new Color(0,0,0,0));
         txtHeight.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        txtHeight.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtHeight.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)));
         txtHeight.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -149,16 +160,9 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         jLabel7.setForeground(new java.awt.Color(0, 0, 204));
         jLabel7.setText("ผล");
 
-        txtResult.setColumns(50);
+        txtResult.setEditable(false);
         txtResult.setFont(new java.awt.Font("TH Baijam", 1, 24)); // NOI18N
-        txtResult.setLineWrap(true);
-        txtResult.setTabSize(0);
-        txtResult.setToolTipText("");
-        txtResult.setAlignmentX(10.0F);
-        txtResult.setAlignmentY(10.0F);
-        txtResult.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        txtResult.setFocusable(false);
-        jScrollPane2.setViewportView(txtResult);
+        txtResult.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -176,21 +180,19 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(330, 330, 330)
-                                .addComponent(jLabel4))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)))
+                        .addGap(330, 330, 330)
+                        .addComponent(jLabel4)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel7)
-                        .addGap(112, 112, 112))))
+                        .addGap(112, 112, 112))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,13 +212,12 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(txtHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGap(29, 29, 29))
+                            .addComponent(jLabel6)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(txtResult)))
+                .addGap(29, 29, 29))
         );
 
         btnCalc1.setFont(new java.awt.Font("TH Baijam", 1, 24)); // NOI18N
@@ -254,6 +255,11 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         txtId.setFont(new java.awt.Font("TH Baijam", 1, 20)); // NOI18N
         txtId.setForeground(new java.awt.Color(0, 0, 0));
         txtId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(51, 51, 51)));
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("TH Baijam", 1, 20)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
@@ -332,7 +338,7 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Name", "Surname", "Weight", "Height", "WeightResult"
+                "รหัส", "ชื่อ", "นามสกุล", "น้ำหนัก", "ส่วนสูง", "ผลการวัดน้ำหนัก"
             }
         ) {
             Class[] types = new Class [] {
@@ -345,11 +351,6 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         });
         tblData.setRequestFocusEnabled(false);
         tblData.setShowGrid(true);
-        tblData.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                tblDataMouseDragged(evt);
-            }
-        });
         tblData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblDataMouseClicked(evt);
@@ -357,20 +358,22 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblData);
 
+        jScrollPane3.setViewportView(jScrollPane1);
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -433,13 +436,13 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1144, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1144, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -447,9 +450,10 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        String text = "Do you want to leave the program";
-        String heading = "Confirm exit the program";
-        int option = JOptionPane.showConfirmDialog(rootPane, text, heading,
+        JLabel message = new JLabel("คุณต้องการออกจากโปรแกรม");
+        message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        String text1 = "ยืนยันการออกจากโปรแกรม ";
+        int option = JOptionPane.showConfirmDialog(rootPane, message, text1,
                 JOptionPane.YES_NO_CANCEL_OPTION);
         if (option == JOptionPane.YES_OPTION) {
             dispose();
@@ -468,18 +472,18 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnCalc1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalc1ActionPerformed
-        double weight = Double.parseDouble(txtWeight.getText());
-        double height = Double.parseDouble(txtHeight.getText()) / 100; // แปลงเป็นเมตร
+        double weight = Double.parseDouble(txtWeight.getText()); 
+        double height = Double.parseDouble(txtHeight.getText()) / 100;  
         double bmi = weight / (height * height);
 
-        String result;
+        String result = "";
         if (bmi >= 0 && bmi <= 22.9) {
             result = "ปกติ";
             txtResult.setBackground(Color.GREEN);
-        } else if (bmi > 22 && bmi <= 24) {
+        } else if (bmi > 22 && bmi <= 24.9) {
             result = "ท้วม";
             txtResult.setBackground(Color.YELLOW);
-        } else if (bmi > 24 && bmi <= 29) {
+        } else if (bmi > 24 && bmi <= 29.9) {
             result = "อ้วนระดับ1";
             txtResult.setBackground(Color.PINK);
         } else {
@@ -498,9 +502,6 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtHeightKeyTyped
 
-    /*                                              *\
-        ล็อกค่าใน jTextField ให้ป้อนได้เฉพาะตัวเลข 
-    \*                                              */
     private void txtWeightKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightKeyTyped
         char c = evt.getKeyChar();
         if (!((c >= '0') && (c <= '9') || (c <= '.') || (c == java.awt.event.KeyEvent.VK_BACK_SPACE)
@@ -511,98 +512,123 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtWeightKeyTyped
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        int row = tblData.getSelectedRow();
-        if (row >= 0) {
-            String idDel = (String) tblData.getValueAt(row, 0);
-            String delete = "DELETE FROM weight where id = " + idDel;
-            System.out.println("Delete" + delete);
-            int delrow = myDB.stmtCreInsUpdDel(delete);
-            if (delrow > 0) {
-                model.removeRow(row);
+        int[] selectedRows = tblData.getSelectedRows(); 
+        if (selectedRows.length > 0) { 
+            JLabel messageout = new JLabel("คุณต้องการลบข้อมูลหรือไม่ ? ");
+            messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            String text = "ยืนการลบข้อมูล";
+            int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                    JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) { 
+                for (int i = selectedRows.length - 1; i >= 0; i--) { 
+                    int idDel = Integer.parseInt((String) tblData.getValueAt(selectedRows[i], 0));
+                    String delete = "DELETE FROM weight WHERE id=" + idDel;
+                    System.out.println("delete = " + delete);
+                    int row = myDB.stmtCreInsUpdDel(delete);
+                    
+                    if (row > 0) {
+                        model.removeRow(selectedRows[i]);
+                    }
+                }
                 JLabel message = new JLabel("ลบข้อมูลสำเร็จ");
                 message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
                 JOptionPane.showMessageDialog(this, message);
-            } else {
-                JOptionPane.showConfirmDialog(rootPane, "cannot be deleted");
             }
         } else {
-            JOptionPane.showMessageDialog(rootPane, "เลือกแถวข้อมูลก่อนลบค่ะ");
+            JLabel message = new JLabel("กรุณาเลือกข้อมูลที่ต้องการลบ");
+            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            JOptionPane.showMessageDialog(this, message);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-
         int row = tblData.getSelectedRow();
         String idUpd = (String) tblData.getValueAt(row, 0);
         String nameUpd = txtName.getText();
         String surnameUpd = txtSurname.getText();
-        double weightUpd = Double.parseDouble(txtWeight.getText()); // แปลง String เป็น double
-        double heightUpd = Double.parseDouble(txtHeight.getText()); // แปลง String เป็น double
+        double weightUpd = Double.parseDouble(txtWeight.getText());
+        double heightUpd = Double.parseDouble(txtHeight.getText());
         String weightResultUpd = txtResult.getText();
 
-        String update = "UPDATE weight SET name = '" + nameUpd + "', surname = '" + surnameUpd + "', weight = " + weightUpd + ", height = " + heightUpd + ", weightResult = '" + weightResultUpd + "' WHERE id = '" + idUpd + "'";
+        JLabel messageout = new JLabel("คุณต้องการอัพเดตข้อมูลหรือไม่ ? ");
+        messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        String text = "ยืนการอัพเดตข้อมูล";
+        int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) { 
+            String update = "UPDATE weight SET name = '" + nameUpd + "', surname = '" + surnameUpd + "', weight = " + weightUpd + ", height = " + heightUpd + ", weightResult = '" + weightResultUpd + "' WHERE id = '" + idUpd + "'";
+            System.out.println("update = " + update);
 
-        System.out.println(
-                "update = " + update);
+            int updRow = myDB.stmtCreInsUpdDel(update); 
+            if (updRow > 0) {
+                tblData.setValueAt(nameUpd, row, 1); // อัปเดตคอลัมน์ 
+                tblData.setValueAt(surnameUpd, row, 2);
+                tblData.setValueAt(weightUpd, row, 3);
+                tblData.setValueAt(heightUpd, row, 4);
+                tblData.setValueAt(weightResultUpd, row, 5);
 
-        int updRow = myDB.stmtCreInsUpdDel(update);
-        if (updRow > 0) {
-            tblData.setValueAt(nameUpd, row, 1);
-            tblData.setValueAt(surnameUpd, row, 2);
-            tblData.setValueAt(weightUpd, row, 3); // อัปเดตคอลัมน์ weight
-            tblData.setValueAt(heightUpd, row, 4); // อัปเดตคอลัมน์ height
-            tblData.setValueAt(weightResultUpd, row, 5); // อัปเดตคอลัมน์ weightResult
+                JLabel message = new JLabel("อัปเดตข้อมูลสำเร็จ");
+                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                JOptionPane.showMessageDialog(this, message);
+                
+               clearData();
 
-            JLabel message = new JLabel("อัปเดตข้อมูลสำเร็จ");
-            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-            JOptionPane.showMessageDialog(this, message);
-        } else {
-            JLabel message = new JLabel("เกิดข้อผิดพลาดในการอัปเดต!!!");
-            message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-            JOptionPane.showMessageDialog(this, message);
+            } else {
+                JLabel message = new JLabel("เกิดข้อผิดพลาดในการอัปเดต!!!");
+                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                JOptionPane.showMessageDialog(this, message);
+            }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
-
-    
-    private boolean conditionForColorChange(String weightResult){
-        return "Normal".equals(weightResult);
-    }
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
         String idAdd = txtId.getText();
         String nameAdd = txtName.getText();
         String surnameAdd = txtSurname.getText();
-        double weight = Double.parseDouble(txtWeight.getText()); // แปลง String เป็น double
-        double height = Double.parseDouble(txtHeight.getText()); // แปลง String เป็น double
+        double weight = Double.parseDouble(txtWeight.getText());
+        double height = Double.parseDouble(txtHeight.getText());
         String weightResult = txtResult.getText();
 
         if (idAdd.length() > 0 && nameAdd.length() > 1 && surnameAdd.length() > 2) {
-            String insert = "INSERT INTO weight VALUES('" + idAdd + "','" + nameAdd + "','" + surnameAdd + "'," + weight + "," + height + ",'" + weightResult + "')";
-            System.out.println("insert = " + insert);
-            int row = myDB.stmtCreInsUpdDel(insert);
-            if (row > 0) {
-                Object[] rowData = {idAdd, nameAdd, surnameAdd, weight, height, weightResult}; // ใช้ Object[] เพื่อให้ตารางแสดงข้อมูลที่เป็นตัวเลขได้
-                model.addRow(rowData);
-                JLabel message = new JLabel("เพิ่มข้อมูลสำเร็จ");
-                message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
-                JOptionPane.showMessageDialog(this, message);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Add Error");
+            JLabel messageout = new JLabel("คุณต้องการเพิ่มข้อมูลหรือไม่ ? ");
+            messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+            String text = "ยืนการเพิ่มข้อมูล";
+            int optional = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                    JOptionPane.YES_NO_OPTION);
+            if (optional == JOptionPane.YES_OPTION) {
+                String insert = "INSERT INTO weight VALUES('" + idAdd + "','" + nameAdd + "','" + surnameAdd + "'," + weight + "," + height + ",'" + weightResult + "')";
+                System.out.println("insert = " + insert);
+                int row = myDB.stmtCreInsUpdDel(insert);
+                if (row > 0) {
+                    Object[] rowData = {idAdd, nameAdd, surnameAdd, weight, height, weightResult};
+                    model.addRow(rowData);
+
+                    JLabel message = new JLabel("เพิ่มข้อมูลสำเร็จ");
+                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                    JOptionPane.showMessageDialog(this, message);
+                    
+                    clearData();
+                } else {
+                    JLabel message = new JLabel("ไม่สามารถเพิ่มข้อมูลได้!!!");
+                    message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+                    JOptionPane.showMessageDialog(this, message);
+                }
             }
         } else {
-            JLabel message = new JLabel("กรอกข้อมูลให้ครบถ้วน!");
+            JLabel message = new JLabel("กรอกข้อมูลให้ครบถ้วน !!!");
             message.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
             JOptionPane.showMessageDialog(this, message);
         }
     }//GEN-LAST:event_btnAddDataActionPerformed
 
-    private void tblDataMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseDragged
-
-    }//GEN-LAST:event_tblDataMouseDragged
-
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-        int row = tblData.getSelectedRow();
-        if (row >= 0) {
+        int row = tblData.getSelectedRow(); 
+        JLabel messageout = new JLabel("คุณต้องการเลือกข้อมูลหรือไม่ ? ");
+        messageout.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 12));
+        String text = "ยืนยันการเลือกแถว";
+        int option = JOptionPane.showConfirmDialog(rootPane, messageout, text,
+                JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) { 
             if (row >= 0) {
                 String idData = String.valueOf(tblData.getValueAt(row, 0));
                 String nameData = (String) tblData.getValueAt(row, 1);
@@ -616,12 +642,33 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
                 txtSurname.setText(surnameData);
                 txtWeight.setText(String.valueOf(weightData));
                 txtHeight.setText(String.valueOf(heightData));
+
+                double bmi = weightData / (heightData * heightData) / 100;
+                if (bmi >= 0 && bmi <= 22.9) {
+                    txtResult.setBackground(Color.GREEN);
+                } else if (bmi > 22 && bmi <= 24) {
+                    txtResult.setBackground(Color.YELLOW);
+                } else if (bmi > 24 && bmi <= 29) {
+                    txtResult.setBackground(Color.PINK);
+                } else {
+                    txtResult.setBackground(Color.RED);
+                }
+
                 txtResult.setText(weightResultData);
             }
         }
     }//GEN-LAST:event_tblDataMouseClicked
 
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+        char c = evt.getKeyChar();
+        if (!((c >= '0') && (c <= '9') || (c <= '.') || (c == java.awt.event.KeyEvent.VK_BACK_SPACE)
+                || (c == java.awt.event.KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
 
+    // การประกาศตัวแปร - ห้ามแก้ไข
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddData;
     private javax.swing.JButton btnCalc1;
@@ -644,12 +691,12 @@ public class FrmWeightHeight extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable tblData;
     private javax.swing.JTextField txtHeight;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextArea txtResult;
+    private javax.swing.JTextField txtResult;
     private javax.swing.JTextField txtSurname;
     private javax.swing.JTextField txtWeight;
     // End of variables declaration//GEN-END:variables
